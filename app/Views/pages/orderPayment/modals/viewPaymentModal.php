@@ -520,7 +520,7 @@
 
         
     }
-    function confirm_cancel_or(id,payment_id){
+    function confirm_cancel_or(id,payment_id,op_id){
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you really want to cancel this Receipt?",
@@ -532,12 +532,12 @@
             confirmButtonText: 'Confirm'
         }).then((result) => {
             if (result.isConfirmed) {
-            cancel_official_receipt(id,payment_id)
+            cancel_official_receipt(id,payment_id,op_id)
             
             }
         });
     }
-    function cancel_official_receipt(id,payment_id){
+    function cancel_official_receipt(id,payment_id,op_id){
         $.ajax({
             data : {id:id,payment_id:payment_id}
             ,type: "POST"
@@ -552,7 +552,7 @@
                     'Cancelled!',
                     'success'
                     ).then((result) => {
-                        location.reload();
+                        view_order_payment(op_id);
                     })
                 }
             }

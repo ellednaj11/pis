@@ -9,6 +9,7 @@
                 <h3 class="card-title"></h3>
                 <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#payment-modal">Draft Order of Payment</button>
               </div>
+              
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="order-payment-table" class="table table-bordered table-striped" style="width:100% !important">
@@ -229,7 +230,7 @@
                             var cancelButton = '';
                             var statName = 'Cancelled';
                             if(data.status != 0){
-                                var cancelButton = `<button style="width:29px; padding:5px; margin:5px" data-toggle="tooltip" data-placement="top" title="Cancel" class="btn btn-danger btn-sm" onclick="confirm_cancel_or(${data.id},${data.payment_id})"><i class="fa fa-ban"></i></button>`;
+                                var cancelButton = `<button style="width:29px; padding:5px; margin:5px" data-toggle="tooltip" data-placement="top" title="Cancel" class="btn btn-danger btn-sm" onclick="confirm_cancel_or(${data.id},${data.payment_id},${data.op_id})"><i class="fa fa-ban"></i></button>`;
                                 statName = 'Created';
                                 active_receipt++;
                             }

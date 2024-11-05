@@ -107,3 +107,6 @@ $routes->get('schedfees/get-schedule-fees-details', 'ScheduleFeesController::get
 // FOR SIDEBAR
 $routes->get('layout/get-for-verify-count', 'Home::get_for_verify_count');
 
+
+//FOR MULTIPLE USE RFERENCE
+$routes->get('payment/get-ref-fund-code', 'PaymentController::get_ref_fund_code');

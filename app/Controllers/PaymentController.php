@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\References\PaymentTypeModel; //Reference
 use App\Models\References\ReceiptBooksModel; //Reference
+use App\Models\References\FundCodeModel; //Reference
 
 use App\Models\OrderPayment\OpHeaderModel;
 use App\Models\OrderPayment\OpDetailModel;
@@ -54,12 +55,16 @@ class PaymentController extends BaseController {
     }
 
     public function get_all_order_payment() {
+        $session = session();
         $db = \Config\Database::connect();
         $builder = $db->table('op_hdr_tbl as hdr');
         $builder->select('hdr.*,stat.status_name');
         // $builder->join('ref_schedule_fees as paytype', 'hdr.application_type = paytype.id','left');
         $builder->join('status_tbl as stat', 'hdr.status = stat.id','left');
         $builder->where('hdr.status !=', 0);
+        if($session->get('isAdmin') != 1){
+            $builder->where('hdr.region_id',$session->get('reg_id'));
+        }
         $builder->orderBy('hdr.id', 'DESC');
         $query = $builder->get()->getResultArray();
 
@@ -798,5 +803,15 @@ class PaymentController extends BaseController {
         } while ($existing !== null);
         
         return $transNumber;
+    }
+
+    //For multiple use reference
+
+    public function get_ref_fund_code() {
+
+        $model = new FundCodeModel();
+        $fund_codes = $model->select('*')
+                            ->findAll();
+        return $this->response->setJSON($fund_codes);
     }
 }

@@ -16,9 +16,9 @@ class AuthController extends BaseController {
         $model = new UserModel();
         if ($this->request->isAJAX()) {
             $id_number = $this->request->getVar('id_number');
-            $rgnid = $this->request->getVar('rgnid');
-            $designation = $this->request->getVar('designation');
-            $section = $this->request->getVar('section');
+            $rgnid = $this->request->getVar('rgnid'); // From IIS API 
+            $designation = $this->request->getVar('designation'); // From IIS API 
+            $section = $this->request->getVar('section'); // From IIS API 
             
             // Check user credentials
             $user = $model->where('iis_id', $id_number)->first();
@@ -45,7 +45,7 @@ class AuthController extends BaseController {
             'id' => $user['id'],
             'name' => $user['first_name'] .' '. $user['last_name'],
             'role' => $user['role'],
-            'reg_id' => $user['rgnid'],
+            'reg_id' => $user['region_id'],
             'designation' => $user['designation'],
             'section' => $user['section'],
             'isAdmin' => $user['isAdmin'],

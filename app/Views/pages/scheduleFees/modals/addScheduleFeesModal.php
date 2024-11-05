@@ -187,7 +187,6 @@
         });
     }
 
-    
     // Start of particular tables functionality
     var refresh_particular_index = function() {
         var total_tr = $('#particular_table > tbody > tr').length;
@@ -199,10 +198,10 @@
             var button = $(this).find('button');
 
             text.eq(0).attr('id', 'td_item-'+i);
-            text.eq(1).attr('id', 'td_fund_code-'+i);
-            text.eq(2).attr('id', 'td_amount-'+i);
-            select.eq(0).attr('id', 'bank_name-'+i);
-            select.eq(1).attr('id', 'bank_acc-'+i);
+            select.eq(0).attr('id', 'td_fund_code-'+i);
+            text.eq(1).attr('id', 'td_amount-'+i);
+            select.eq(1).attr('id', 'bank_name-'+i);
+            select.eq(2).attr('id', 'bank_acc-'+i);
 
             // select.eq(0).attr('id', 'td_comp-'+i);
 
@@ -231,6 +230,11 @@
         var len = $("#particular_table > tbody > tr").length+1;
         srl_id = len;
 
+        var fundCodeOptions = '<option disabled selected>Select an option</option>';
+        $.each(fundCodes, function(key, code) {
+            fundCodeOptions += '<option value="' + code.name + '">' + code.name + '</option>';
+        });
+
         var bankOptions = '<option disabled selected>Select an option</option>';
         $.each(banks, function(key, bank) {
             bankOptions += '<option value="' + bank.value + '">' + bank.value + '</option>';
@@ -246,7 +250,11 @@
             '<tr>'
             +'<td><input class="form-control input-sm td_inputs " type="text"  value = "" ></td>'
 
-            +'<td><input class="form-control input-sm td_inputs " type="text" value = "" ></td>'
+            +'<td><select class="form-control td_inputs">'
+                +fundCodeOptions 
+            +'</select></td>'
+
+            // +'<td><input class="form-control input-sm td_inputs " type="text" value = "" ></td>'
 
             +'<td><input class="form-control input-sm td_inputs  numeric" type="text" value = ""></td>'
 
@@ -279,11 +287,11 @@
 	            $(tr).find('td:eq(0) input').removeClass('is-invalid');
 	        }
 
-            if($(tr).find('td:eq(1) input').val() == ""){
+            if($(tr).find('td:eq(1) select').val() == null){
 	            error = 1;
-	            $(tr).find('td:eq(1) input').addClass('is-invalid');
+	            $(tr).find('td:eq(1) select').addClass('is-invalid');
 	        }else{
-	            $(tr).find('td:eq(1) input').removeClass('is-invalid');
+	            $(tr).find('td:eq(1) select').removeClass('is-invalid');
 	        }
 
             if($(tr).find('td:eq(2) input').val() == ""){

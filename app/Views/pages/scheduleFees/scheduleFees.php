@@ -57,6 +57,7 @@
     <script>
         var banks;
         var accounts;
+        var fundCodes;
         $(function () {
             numeric_control();
             $('[data-toggle="tooltip"]').tooltip();
@@ -67,6 +68,12 @@
                 accounts = result['account_number'];
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error('Error getting banks: ' + textStatus, errorThrown);
+            });
+
+            get_fund_code().done(function(result) {
+                fundCodes = result;
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Error getting fund codes: ' + textStatus, errorThrown);
             });
         });
 
@@ -283,6 +290,14 @@
             
         }
 
+        function get_fund_code(){
+            return $.ajax({
+                type: 'get'
+                ,url: '<?= base_url(); ?>payment/get-ref-fund-code'
+                ,dataType: 'json'
+            });
+        }
+
         function get_banks(){
             var data = { reg_id : 18}
             return $.ajax({
@@ -292,6 +307,8 @@
                 ,dataType: 'json'
             });
         }
+
+        
 
     </script>
     

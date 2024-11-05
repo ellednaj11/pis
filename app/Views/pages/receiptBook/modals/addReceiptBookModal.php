@@ -11,9 +11,15 @@
         <form class="form-horizontal" id="receipt_form">
             <div class="card-body">
                 <div class=" row">
-                    <label for="fund_code"  class="col-sm-4 col-form-label">Fund Code</label>
+                    <!-- <label for="fund_code"  class="col-sm-4 col-form-label">Fund Code</label>
                     <div class=" form-group col-sm-8">
                     <input type="text" class="form-control" id="fund_code" name="fund_code" placeholder="">
+                    </div> -->
+                    <label for="fund_code"  class="col-sm-4 col-form-label">Fund Code</label>
+                    <div class=" form-group col-sm-8">
+                        <select class="form-control" id="fund_code" name="fund_code">
+                            <option disabled selected>Select an option</option>
+                        </select>
                     </div>
                 </div>
                 <div class=" row">
@@ -60,7 +66,7 @@
 <script>
     $(function () {
         numeric_control();
-
+        
         $.validator.setDefaults({
             submitHandler: function (form) {
                 confirm_submit(); // Uncomment this line if you want to submit the form
@@ -230,6 +236,34 @@
         });
     }
 
+    function get_ref_fund_code(){
+        $.ajax({
+            type: 'get'
+            ,url: '<?= base_url(); ?>payment/get-ref-fund-code'
+            , beforeSend : function() {
+            }        
+            , success: function(result) {
+                data = result;
+                var select = $('#fund_code');
+                select.empty().append('<option disabled selected>Select Fund Code</option>');
+                $.each(data, function(index, item) {
+                    var optionText = item.name; 
+                    select.append(
+                        $('<option>', {
+                            value: item.name,
+                            text: optionText,
+                        })
+                    );
+                });
+            }
+            , failure: function(msg) {
+                console.log("Failure to connect to server!");
+            }
+            , error: function(status) {
+                
+            }
+        });
+    }
     
     function clear_draft(){
         $('#receipt_form').find('input, textarea, select').val('');

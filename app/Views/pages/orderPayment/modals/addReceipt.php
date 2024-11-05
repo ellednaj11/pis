@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div class=" row">
-                    <label for="or_attach" class="col-sm-4 col-form-label">Upload Official Receipt</label>
+                    <label for="or_attach" class="col-sm-4 col-form-label">Supporting Documents</label>
                     <div class="form-group col-sm-8">
                     <input type="file" class="form-control" id="or_attach" name="or_attach[]" placeholder="" multiple>
                     </div>

@@ -7,7 +7,7 @@
             <div class="card">
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title"></h3>
-                <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#add-receipt-modal">Add receipt Book</button>
+                <button class="btn btn-primary ml-auto" onclick="add_receipt_book()">Add receipt Book</button>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -60,6 +60,11 @@
             $('[data-toggle="tooltip"]').tooltip();
             get_all_receipt_book();
         });
+
+        function add_receipt_book(){
+            get_ref_fund_code();
+            $('#add-receipt-modal').modal('show');
+        }
 
         function get_all_receipt_book() {
             $.ajax({
