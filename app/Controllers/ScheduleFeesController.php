@@ -15,7 +15,10 @@ class ScheduleFeesController extends BaseController {
 
     public function get_all_schedule_fees() {
         $model = new PaymentTypeModel();
-        $data = $model->where('status !=', 0)->findAll();
+        $data = $model->select('ref_schedule_fees.* , GROUP_CONCAT(paymeth.method_name) AS modules')
+                    ->where('status !=', 0)
+                    ->join('ref_payment_method as paymeth', 'FIND_IN_SET(paymeth.id, ref_schedule_fees.ref_payment_method_id) > 0', 'left')
+                    ->groupBy('ref_schedule_fees.id')->orderBy('id', 'DESC')->findAll();
         return $this->response->setJSON($data);
     }
 

@@ -109,7 +109,8 @@ class Home extends BaseController
         if (!empty($query)) {
             $header_data = $query[0];
         }
-
+        $header_data['expiration_date'] = \DateTime::createFromFormat('Y-m-d', $header_data['expiration_date'])->format('F j, Y');
+        $header_data['issued_date'] = \DateTime::createFromFormat('Y-m-d', $header_data['issued_date'])->format('F j, Y');
         $model = new OpDetailModel();
         $detail_data = $model->where('op_hdr_id', $header_data['id'])->findAll();
         $amount_due = 0; // Initialize the total amount due variable

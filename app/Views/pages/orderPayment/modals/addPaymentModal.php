@@ -51,7 +51,7 @@
                         <div class="row">
                             <label for="payment_for" class="col-sm-4 col-form-label">Payment For <button id="payment_tips" class="btn btn-info btn-sm" style="display: none;"><i class="fa fa-question"></i></button></label>
                             <div class="form-group col-sm-8">
-                                <select class="form-control" id="payment_for" name="payment_for" onchange="get_particular()">
+                                <select class="form-control select2bs4"  style="width: 100%;" id="payment_for" name="payment_for" onchange="get_particular()">
                                     <option disabled selected>Select an option</option>
                                 </select>
                             </div>
@@ -118,6 +118,10 @@
     var banks;
     var accounts;
     $(function () {
+        $('.select2').select2()
+        $('.select2bs4').select2({
+        theme: 'bootstrap4'
+        })
         numeric_control();
         get_payment_for();
 

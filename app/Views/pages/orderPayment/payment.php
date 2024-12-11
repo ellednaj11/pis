@@ -15,7 +15,7 @@
                 <table id="order-payment-table" class="table table-bordered table-striped" style="width:100% !important">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <!-- <th>#</th> -->
                             <th>Trans No.</th>
                             <th>Order of Payment No.</th>
                             <!-- <th>Issued Date</th> -->
@@ -30,7 +30,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                            <th>#</th>
+                            <!-- <th>#</th> -->
                             <th>Trans No.</th>
                             <th>Order of Payment No.</th>
                             <!-- <th>Issued Date</th> -->
@@ -91,7 +91,7 @@
                         count = count + 1;
                         $('#order-payment-table tbody').append(
                         '<tr>'
-                            +'<td>'+count+'</td>'
+                            // +'<td>'+count+'</td>'
                             +'<td>'+result[i]['trans_no']+'</td>'
                             +'<td>'+result[i]['order_payment_no']+'</td>'
                             // +'<td>'+result[i]['issued_date']+'</td>'

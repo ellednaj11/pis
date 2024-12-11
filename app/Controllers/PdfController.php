@@ -106,6 +106,11 @@ class PdfController extends BaseController {
 
         $statusColor = $this->status_color($header_data['status']);
 
+        $model2 = new PaymentTypeModel();
+        $payment_methods = $model2->select('*')
+                        ->where('ref_schedule_fees.id', $header_data['application_id'])
+                        ->join('ref_payment_method as paymeth', 'FIND_IN_SET(paymeth.id, ref_schedule_fees.ref_payment_method_id) > 0', 'left')->findAll();
+
         // Initialize mPDF
         $mpdf = new Mpdf();
 
@@ -170,23 +175,16 @@ class PdfController extends BaseController {
                 </tr>
             </table>
 
-            <p><b>Available Payment Channel/s:</b></p>
-            <ol>
-                <li><b>Over-EMB-Cashier</b>
-                    <ul>
-                        <li>Please visit EMB Central, Visayas Avenue Diliman, Quezon City</li>
-                        <li>Present this Order of Payment to the Cashier</li>
-                    </ul>
-                </li>
-                <li><b>Paymaya</b>
-                    <ul>
-                        <li>Open your internet browser and type the url: <a href="https://pay.emb.gov.ph/client">https://pay.emb.gov.ph/client</a></li>
-                        <li>Make sure to have good internet signal to avoid interruption</li>
-                        <li>Enter the required information related to the Order of Payment page.</li>
-                        <li>Click the <b>Paymaya</b> icon and proceed as instructed</li>
-                    </ul>
-                </li>
-            </ol>
+            <p style="font-size:15px;"><b>Available Payment Channel/s:</b></p>
+            <ol>';
+            foreach ($payment_methods as $item) {
+                $htmlContent .= '<br/><li style="font-size:12px;"><b>' . $item['method_name'] . '</b>
+                                    <ul>
+                                        ' . nl2br(htmlspecialchars($item['method_instruction'])) . '
+                                    </ul>
+                                </li>';
+            }
+        $htmlContent .= '</ol>
 
             <div class="footer">
                 <p>This is a system-generated document hence a signature is not required. However, the Order of Payment transaction can be validated by browsing to <a href="https://pay.emb.gov.ph/client">https://pay.emb.gov.ph/client</a> or scanning the QR Code.</p>

@@ -50,6 +50,7 @@ class PaymentController extends BaseController {
         $db = \Config\Database::connect();
         $builder = $db->table('ref_payment_method');
         $builder->select('*');
+        $builder->where('method_status',1);
         $query = $builder->get()->getResultArray();
         return $this->response->setJSON($query);
     }
@@ -563,12 +564,23 @@ class PaymentController extends BaseController {
 
     public function check_trans_number() {
         $transNumber =  $this->request->getVar('trans_no');
+        $opNumber =  $this->request->getVar('op_no');
+        $opDate =  $this->request->getVar('op_date');
         $opHeaderModel = new OpHeaderModel();
-        $existing = $opHeaderModel->where('trans_no', $transNumber)->first();
+        if($opNumber != null){
+            $existing = $opHeaderModel->where('trans_no', $transNumber)
+                    ->where('order_payment_no', $opNumber)
+                    ->where('issued_date', $opDate)->first();
+        }else{
+            $existing = $opHeaderModel->where('trans_no', $transNumber)->first();
+        }
+        
+        
+                    
         $encodedId = encrypt_id($transNumber);
 
         $response['encryptText'] =  encrypt_id($transNumber);
-
+        $response['test'] = $opNumber;
         $response['msg'] = 'false';
         if($existing){
             $response['msg'] = 'true';

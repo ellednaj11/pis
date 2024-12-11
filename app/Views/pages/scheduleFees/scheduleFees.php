@@ -16,11 +16,7 @@
                         <tr>
                             <th>#</th>
                             <th>Payment for</th>
-                            <!-- <th>Fund Code</th>
-                            <th>Particular</th>
-                            <th>Amount</th>
-                            <th>Settlement Bank</th>
-                            <th>Bank Account</th> -->
+                            <th>Payment Facility</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -30,11 +26,7 @@
                         <tr>
                             <th>#</th>
                             <th>Payment for</th>
-                            <!-- <th>Fund Code</th>
-                            <th>Particular</th>
-                            <th>Amount</th>
-                            <th>Settlement Bank</th>
-                            <th>Bank Account</th> -->
+                            <th>Payment Facility</th>
                             <th>Actions</th>
                         </tr>
                     </tfoot>
@@ -121,15 +113,20 @@
                 , success: function(result) {
                     $('#schedule-fees-table tbody').empty();
                     var count = 0;
+                    var payment_method = '<td style="color:red;">Please put Payment Method</td>';
                     for(var i = 0; i< result.length; i++)
                     {
+                        if(result[i]['modules'] != null){
+                            var payment_method = '<td>'+result[i]['modules']+'</td>';
+                        }
                         count = count + 1;
                         var remaining_qty = result[i]['orig_qty'] - result[i]['used_qty'];
                         $('#schedule-fees-table tbody').append(
                         '<tr>'
                             +'<td>'+count+'</td>'
                             +'<td>'+result[i]['name']+'</td>'
-                            // +'<td>'+result[i]['account_type']+'</td>'
+                            // +'<td>'+result[i]['modules']+'</td>'
+                            +payment_method
                             // +'<td>'+result[i]['account_type']+'</td>'
                             // +'<td>'+result[i]['status']+'</td>'
                             // +'<td>'+result[i]['bank_name']+'</td>'

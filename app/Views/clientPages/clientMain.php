@@ -27,14 +27,14 @@
                 <label for="trans_no">Transaction ID / Application ID</label>
                 <input type="text" class="form-control" id="trans_no" name="trans_no" placeholder="Transaction Number">
             </div>
-            <!-- <div class="form-group">
+            <div class="form-group">
                 <label for="password">Order of Payment No</label>
-                <input type="password" class="form-control" id="password" placeholder="Transaction ID / Application ID">
+                <input type="text" class="form-control" id="op_no" name="op_no" placeholder="Order of Payment Number">
             </div>
             <div class="form-group">
                 <label for="password">Order of Payment Date</label>
-                <input type="password" class="form-control" id="password" placeholder="Transaction ID / Application ID">
-            </div> -->
+                <input type="date" class="form-control" id="op_date" name="op_date">
+            </div>
             <!-- <button class="btn btn-primary btn-block">Submit</button> -->
             <button  id="loginsubmit" class="btn btn-info btn-block">Submit</button>
         </form>
@@ -48,11 +48,14 @@
 <!-- <script src="<?= base_url('public/dist/js/adminlte.min.js') ?>"></script> -->
 <script src="<?php echo base_url(); ?>public/plugins/jquery-validation/jquery.validate.min.js"></script>
 <script>
+    var inputNames = ['trans_no', 'op_no', 'op_date'];
     $(function () {
         $.validator.setDefaults({
             submitHandler: function (form,event) {
                 event.preventDefault(); 
                 var trans_no = $('#trans_no').val();
+                var op_no = $('#op_no').val();
+                var op_date = $('#op_date').val();
                 // fetch("https://iis.emb.gov.ph/embis/api/pis_api/login_api", {
                 //     method: "POST",
                 //     body: data
@@ -70,7 +73,9 @@
                 $.ajax({
                     type: 'get',
                     data: {
-                        trans_no: trans_no
+                        trans_no: trans_no,
+                        op_no: op_no,
+                        op_date: op_date
                     },
                     url: '<?= base_url(); ?>/payment/check-trans-number',
                     success: function(result) {
@@ -78,23 +83,25 @@
                         if (result.msg == "true") {
                             window.location.href = "<?= base_url(); ?>accept-payment?token="+result.encryptText;
                         } else{
-                            alert('Please enter valid Transaction Number')
+                            alert('Please enter valid Information')
                         }
                     }
                 })
             }
         });
+        var rules = {};
+        var messages = {};
+        inputNames.forEach(function(name) {
+            rules[name] = {
+                required: true
+            };
+            messages[name] = {
+                required: "This field is required"
+            };
+        });
         $('#trans-form').validate({
-            rules: {
-            trans_no: {
-                required: true,
-            },
-            },
-            messages: {
-                trans_no: {
-                required: "Please enter Transaction Number",
-            },
-            },
+            rules: rules,
+            messages: messages,
             errorElement: 'span',
             errorPlacement: function (error, element) {
             error.addClass('invalid-feedback');
