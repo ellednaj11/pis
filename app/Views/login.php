@@ -5,7 +5,7 @@
             <div class="text-center">
             <img class="text-center" id="image-logo-denr" src="https://iis.emb.gov.ph/embis/assets/images/logo-denr.png" alt="logo-denr" style="width:100px;height:100px;margin-bottom: 15px;"><br>
             </div>
-            
+
             <h3 class="text-center" style="color:green;">ENVIRONMENTAL MANAGEMENT BUREAU</h3><br>
             <form id="login-form">
                 <div class="form-group">
@@ -22,6 +22,7 @@
                 <div class="row">
                     <div class="col-12">
                         <button  id="loginsubmit" class="btn btn-primary btn-block">LOGIN</button>
+                        <?= base_url() ?>
                     </div>
                 </div>
             </form>
@@ -40,7 +41,7 @@
     $(function () {
         $.validator.setDefaults({
             submitHandler: function (form,event) {
-                event.preventDefault(); 
+                event.preventDefault();
                 var username = $('#username').val();
                 var password = $('#password').val();
                 var data = new FormData();
@@ -114,5 +115,3 @@
     });
 
 </script>
-
-

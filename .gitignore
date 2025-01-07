@@ -41,7 +41,9 @@ $RECYCLE.BIN/
 #-------------------------
 # These should never be under version control,
 # as it poses a security risk.
-# .env
+.env
+index.php
+spark
 .vagrant
 Vagrantfile
 
@@ -87,6 +89,11 @@ phpunit
 #vendor/
 
 #-------------------------
+# Production Index.php
+#-------------------------
+
+
+#-------------------------
 # IDE / Development Files
 #-------------------------
 
@@ -125,4 +132,3 @@ nb-configuration.xml
 /results/
 /phpunit*.xml
 /.phpunit.*.cache
-

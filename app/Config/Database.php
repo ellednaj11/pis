@@ -29,8 +29,8 @@ class Database extends Config
     public array $default = [
         'DSN'      => '',
         'hostname' => 'localhost',
-        'username' => 'root',
-        'password' => '',
+        'username' => 'paymentDB_user',
+        'password' => 'payDB3MB2o24x',
         'database' => 'pis',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',

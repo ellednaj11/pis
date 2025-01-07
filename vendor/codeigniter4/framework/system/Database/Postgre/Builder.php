@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of CodeIgniter 4 framework.
  *
@@ -157,7 +159,7 @@ class Builder extends BaseBuilder
         $table = $this->QBFrom[0];
         $set   = $this->binds;
 
-        array_walk($set, static function (array &$item) {
+        array_walk($set, static function (array &$item): void {
             $item = $item[0];
         });
 
@@ -409,10 +411,8 @@ class Builder extends BaseBuilder
      * Returns cast expression.
      *
      * @TODO move this to BaseBuilder in 4.5.0
-     *
-     * @param float|int|string $expression
      */
-    private function cast($expression, ?string $type): string
+    private function cast(string $expression, ?string $type): string
     {
         return ($type === null) ? $expression : 'CAST(' . $expression . ' AS ' . strtoupper($type) . ')';
     }
@@ -490,11 +490,11 @@ class Builder extends BaseBuilder
             // autoincrement identity field must use DEFAULT and not NULL
             // this could be removed in favour of leaving to developer but does make things easier and function like other DBMS
             foreach ($constraints as $constraint) {
-                $key = array_search(trim($constraint, '"'), $fieldNames, true);
+                $key = array_search(trim((string) $constraint, '"'), $fieldNames, true);
 
                 if ($key !== false) {
                     foreach ($values as $arrayKey => $value) {
-                        if (strtoupper($value[$key]) === 'NULL') {
+                        if (strtoupper((string) $value[$key]) === 'NULL') {
                             $values[$arrayKey][$key] = 'DEFAULT';
                         }
                     }

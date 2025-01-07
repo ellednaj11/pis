@@ -9,7 +9,7 @@
                 <h3 class="card-title"></h3>
                 <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#payment-modal">Draft Order of Payment</button>
               </div>
-              
+
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="order-payment-table" class="table table-bordered table-striped" style="width:100% !important">
@@ -65,23 +65,23 @@
         });
 
         function get_all_order_of_payment() {
-            
+
             var user_id = <?= session()->get('id'); ?>;
-            
+
             $.ajax({
                 type: 'get'
                 ,url: '<?= base_url(); ?>payment/get-all-order-payment'
                 , beforeSend : function() {
-                }        
+                }
                 , success: function(result) {
                     $('#order-payment-table tbody').empty();
                     var count = 0;
                     if ($.fn.DataTable.isDataTable('#order-payment-table')) {
                         console.log('destroy table')
                         $('#order-payment-table').DataTable().clear().destroy();
-                       
+
                     }
-                    
+
                     for(var i = 0; i< result.length; i++)
                     {
                         var cancelButton = '';
@@ -99,34 +99,34 @@
                             +'<td>'+result[i]['establishment_name']+'</td>'
                             +'<td>'+numberWithCommas(result[i]['total_amount'])+'</td>'
                             +'<td style="color:'+ status_color(result[i]['status']) +'">'+result[i]['status_name']+'</td>'
-                                                                        
-                            +'<td>' 
+
+                            +'<td>'
                                 +'<button style="width:29px; padding:5px; margin:5px" data-toggle="tooltip" data-placement="top" title="View" class="btn btn-info btn-sm"  onclick="view_order_payment(' + result[i]['id'] + ')"><i class="fa fa-eye"></i></button>'
-                                // +`<button style="width:29px; padding:5px; margin:5px" data-toggle="tooltip" data-placement="top" title="Payment" class="btn btn-success btn-sm"  onclick="add_client_payment('${result[i]['trans_no']}',${result[i]['total_amount']},${result[i]['id']})"><i class="fa fa-money-bill"></i></button>` 
+                                // +`<button style="width:29px; padding:5px; margin:5px" data-toggle="tooltip" data-placement="top" title="Payment" class="btn btn-success btn-sm"  onclick="add_client_payment('${result[i]['trans_no']}',${result[i]['total_amount']},${result[i]['id']})"><i class="fa fa-money-bill"></i></button>`
                                 // + cancelButton
                                 // +'<button style="width:29px; padding:5px; margin:5px" data-toggle="tooltip" data-placement="top" title="Payment" class="btn btn-success btn-sm" onclick="accept_payment(this)"><i class="fa fa-money-bill"></i></button>'
                             +'</td>'
                         +'</tr>'
                     );
                     }
-                    
+
                     $('#order-payment-table').DataTable({
                         "responsive": true, "lengthChange": false, "autoWidth": true, "ordering": false,
                          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
                     }).buttons().container().appendTo('#order-payment-table_wrapper .col-md-6:eq(0)');
-                    
+
                 }
                 , failure: function(msg) {
                     console.log("Failure to connect to server!");
                 }
                 , error: function(status) {
-                    
+
                 }
             });
         }
 
         function view_order_payment(id){
-            
+
             //get_order_payment_dtl(id); // Inside modals/viewPaymentModal.php
             // get_client_payment(id);
             $.ajax({
@@ -154,7 +154,7 @@
 
                     var data_detail = result['detail_data']
                     let particularsHtml = '';
-                    
+
                     var amount_due = 0;
                     data_detail.forEach(particular => {
                         amount_due += parseInt(particular.item_sub_total);
@@ -174,10 +174,10 @@
                     var balance = amount_due;
                     let paymentHtml = '';
                     let receiptHtml = '';
-                    
-                    
+
+
                     if(result['payment_data'].length !== 0){
-                        
+
                         var payment_data = result['payment_data']
                         payment_data.forEach(data => {
                             var cancelButton = '';
@@ -192,7 +192,7 @@
                             if(data.status == 2){
                                 to_verify++;
                             }
-                            
+
                             if(data.status != 0){
                                 var cancelButton = `<button style="width:29px; padding:5px; margin:5px" data-toggle="tooltip" data-placement="top" title="Cancel" class="btn btn-danger btn-sm" onclick="confirm_cancel_payment(${data.id})"><i class="fa fa-ban"></i></button>`;
                                 active_payment++;
@@ -212,7 +212,7 @@
                             </tr>`;
                         });
                         balance = amount_due - amount_paid
-                        
+
                     }else{
                         paymentHtml += '<td colspan="8" class="text-center">No payments recorded.</td>';
                     }
@@ -224,7 +224,7 @@
                     $('#balance').text( numberWithCommas(balance));
 
                     if(result['receipt_data'].length !== 0){
-                        
+
                         var receipt_data = result['receipt_data']
                         receipt_data.forEach(data => {
                             var cancelButton = '';
@@ -243,7 +243,7 @@
                                 <td style="padding: 5px .75rem;">${numberWithCommas(data.amount)}</td>
                                 <td style="padding: 5px .75rem;" class="status" data-status="${data.status}">${statName}</td>
                                 <td style="padding: 5px .75rem;">${data.responsible_person}</td>
-                                
+
                                 <td>
                                     ${cancelButton}
                                 </td>
@@ -254,7 +254,7 @@
                     }
                     $('#receipt_table_body').html(receiptHtml);
                     apply_text_color('receipt_table');
-                    
+
                     $('#view-payment-modal').modal('show');
                 },
             });
@@ -282,18 +282,18 @@
         function format_date(dateStr) {
             // Convert to Date object
             var date = new Date(dateStr);
-            
+
             // Array of month names
             var monthNames = [
                 "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ];
-            
+
             // Format the date to "Month Day, Year"
             var formattedDate = monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
-            
+
             return formattedDate;
         }
     </script>
-    
+
 <?= $this->endSection() ?>

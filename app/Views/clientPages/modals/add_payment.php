@@ -62,9 +62,9 @@
                     <input type="text" class="form-control numeric_no_comma" id="cell_number" name="cell_number" minlength="11"  maxlength="11">
                     </div>
                 </div>
-                
+
             </div>
-            
+
         </form>
         </div>
         <div class="modal-footer justify-content-between">
@@ -86,7 +86,7 @@
         $.validator.addMethod("checkAmountPaid", function(value, element) {
             var amountPaid = parseFloat(value.replace(/,/g, '')) || 0; // Remove commas and parse as float
             var payableAmount = parseFloat($('#payable_amount').val().replace(/,/g, '')) || 0;
-            
+
             return amountPaid <= payableAmount; // Return true if amountPaid is less than or equal to payableAmount
         }, "Amount paid cannot be greater than the payable amount.");
 
@@ -129,7 +129,7 @@
         rules['amount_paid'] = {
             required: true,
             checkAmountPaid: true // Use the custom validator for checking amount_paid
-        };  
+        };
 
         rules['payment_attach[]'] = {
             required: true,
@@ -171,7 +171,7 @@
         get_payment_method();
     });
 
-    
+
     const numeric_control = () => {
         $(".numeric").numeric({ decimal : ".",  negative : false, scale: 2 });
         $(".numeric_no_comma").numeric({ decimal : ".",  negative : false, scale: 2 });
@@ -202,7 +202,7 @@
             if(event.which >= 37 && event.which <= 40){
             event.preventDefault();
             }
-           
+
             $(this).val(function(index, value) {
                 return value
             });
@@ -245,7 +245,7 @@
     }
 
     function submit_op() {
-        
+
         // Create a FormData object using the form element
         var formData = new FormData(document.getElementById('payment_form'));
         formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
@@ -254,6 +254,7 @@
             url: "<?php echo base_url('client/save-client-payment'); ?>", // Your PHP route here
             type: 'POST',
             data: formData,
+            crossOrigin: false,
             contentType: false, // Prevent jQuery from setting the content type
             processData: false, // Prevent jQuery from automatically transforming the data into a query string
             beforeSend: function () {
@@ -306,19 +307,19 @@
             type: 'get'
             ,url: '<?= base_url(); ?>payment/get-payment-method-ref'
             , beforeSend : function() {
-            }        
+            }
             , success: function(result) {
                 var indexToRemove = 0; //Index of EMB Cashier
                 result.splice(indexToRemove, 1);
                 for(var i = 0; i< result.length; i++) {
-                    $('#payment_method').append('<option value="'+result[i]['id']+'">'+result[i]['method_name']+'</option>');                   
+                    $('#payment_method').append('<option value="'+result[i]['id']+'">'+result[i]['method_name']+'</option>');
                 }
             }
             , failure: function(msg) {
                 console.log("Failure to connect to server!");
             }
             , error: function(status) {
-                
+
             }
         });
     }

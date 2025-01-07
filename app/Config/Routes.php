@@ -1,8 +1,8 @@
 <?php
-
+namespace Config;
 use CodeIgniter\Router\RouteCollection;
 
-namespace Config;
+//namespace Config;
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>PIS</title>
-    <link rel="icon" href="<?php echo base_url(); ?>assets/images/logo-denr.png">
+    <link rel="icon" href="<?= base_url('assets/images/logo-denr.png') ?>">
     <!-- AdminLTE CSS -->
     <link rel="stylesheet" href="<?= base_url('public/dist/css/adminlte.min.css') ?>">
     <!-- Font Awesome -->

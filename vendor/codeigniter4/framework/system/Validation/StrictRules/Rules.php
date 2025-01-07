@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CodeIgniter\Validation\StrictRules;
 
+use CodeIgniter\Helpers\Array\ArrayHelper;
 use CodeIgniter\Validation\Rules as NonStrictRules;
 use Config\Database;
 
@@ -23,7 +24,7 @@ use Config\Database;
  */
 class Rules
 {
-    private NonStrictRules $nonStrictRules;
+    private readonly NonStrictRules $nonStrictRules;
 
     public function __construct()
     {
@@ -43,15 +44,19 @@ class Rules
         ?string $error = null,
         ?string $field = null
     ): bool {
-        if (strpos($otherField, '.') !== false) {
+        if (str_contains($otherField, '.')) {
             return $str !== dot_array_search($otherField, $data);
         }
 
-        if (! array_key_exists($field, $data)) {
+        if (! array_key_exists($otherField, $data)) {
             return false;
         }
 
-        if (! array_key_exists($otherField, $data)) {
+        if (str_contains($field, '.')) {
+            if (! ArrayHelper::dotKeyExists($field, $data)) {
+                return false;
+            }
+        } elseif (! array_key_exists($field, $data)) {
             return false;
         }
 
@@ -276,15 +281,19 @@ class Rules
         ?string $error = null,
         ?string $field = null
     ): bool {
-        if (strpos($otherField, '.') !== false) {
+        if (str_contains($otherField, '.')) {
             return $str === dot_array_search($otherField, $data);
         }
 
-        if (! array_key_exists($field, $data)) {
+        if (! array_key_exists($otherField, $data)) {
             return false;
         }
 
-        if (! array_key_exists($otherField, $data)) {
+        if (str_contains($field, '.')) {
+            if (! ArrayHelper::dotKeyExists($field, $data)) {
+                return false;
+            }
+        } elseif (! array_key_exists($field, $data)) {
             return false;
         }
 
@@ -404,5 +413,27 @@ class Rules
         ?string $field = null
     ): bool {
         return $this->nonStrictRules->required_without($str, $otherFields, $data, $error, $field);
+    }
+
+    /**
+     * The field exists in $data.
+     *
+     * @param array|bool|float|int|object|string|null $value The field value.
+     * @param string|null                             $param The rule's parameter.
+     * @param array                                   $data  The data to be validated.
+     * @param string|null                             $field The field name.
+     */
+    public function field_exists(
+        $value = null,
+        ?string $param = null,
+        array $data = [],
+        ?string $error = null,
+        ?string $field = null
+    ): bool {
+        if (str_contains($field, '.')) {
+            return ArrayHelper::dotKeyExists($field, $data);
+        }
+
+        return array_key_exists($field, $data);
     }
 }

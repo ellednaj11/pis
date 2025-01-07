@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of CodeIgniter 4 framework.
  *
@@ -26,6 +28,31 @@ use Config\ContentSecurityPolicy as ContentSecurityPolicyConfig;
  */
 class ContentSecurityPolicy
 {
+    /**
+     * CSP directives
+     *
+     * @var array<string, string> [name => property]
+     */
+    protected array $directives = [
+        'base-uri'        => 'baseURI',
+        'child-src'       => 'childSrc',
+        'connect-src'     => 'connectSrc',
+        'default-src'     => 'defaultSrc',
+        'font-src'        => 'fontSrc',
+        'form-action'     => 'formAction',
+        'frame-ancestors' => 'frameAncestors',
+        'frame-src'       => 'frameSrc',
+        'img-src'         => 'imageSrc',
+        'media-src'       => 'mediaSrc',
+        'object-src'      => 'objectSrc',
+        'plugin-types'    => 'pluginTypes',
+        'script-src'      => 'scriptSrc',
+        'style-src'       => 'styleSrc',
+        'manifest-src'    => 'manifestSrc',
+        'sandbox'         => 'sandbox',
+        'report-uri'      => 'reportURI',
+    ];
+
     /**
      * Used for security enforcement
      *
@@ -113,20 +140,6 @@ class ContentSecurityPolicy
     /**
      * Used for security enforcement
      *
-     * @var string
-     */
-    protected $reportURI;
-
-    /**
-     * Used for security enforcement
-     *
-     * @var array|string
-     */
-    protected $sandbox = [];
-
-    /**
-     * Used for security enforcement
-     *
      * @var array|string
      */
     protected $scriptSrc = [];
@@ -148,6 +161,21 @@ class ContentSecurityPolicy
     /**
      * Used for security enforcement
      *
+     * @var array|string
+     */
+    protected $sandbox = [];
+
+    /**
+     * A set of endpoints to which csp violation reports will be sent when
+     * particular behaviors are prevented.
+     *
+     * @var string|null
+     */
+    protected $reportURI;
+
+    /**
+     * Used for security enforcement
+     *
      * @var bool
      */
     protected $upgradeInsecureRequests = false;
@@ -162,7 +190,7 @@ class ContentSecurityPolicy
     /**
      * Used for security enforcement
      *
-     * @var array
+     * @var list<string>
      */
     protected $validSources = [
         'self',
@@ -215,7 +243,7 @@ class ContentSecurityPolicy
 
     /**
      * An array of header info since we have
-     * to build ourself before passing to Response.
+     * to build ourselves before passing to Response.
      *
      * @var array
      */
@@ -567,6 +595,9 @@ class ContentSecurityPolicy
      *
      * @see http://www.w3.org/TR/CSP/#directive-report-uri
      *
+     * @param string $uri URL to send reports. Set `''` if you want to remove
+     *                    this directive at runtime.
+     *
      * @return $this
      */
     public function setReportURI(string $uri)
@@ -704,26 +735,6 @@ class ContentSecurityPolicy
         $response->setHeader('Content-Security-Policy', []);
         $response->setHeader('Content-Security-Policy-Report-Only', []);
 
-        $directives = [
-            'base-uri'        => 'baseURI',
-            'child-src'       => 'childSrc',
-            'connect-src'     => 'connectSrc',
-            'default-src'     => 'defaultSrc',
-            'font-src'        => 'fontSrc',
-            'form-action'     => 'formAction',
-            'frame-ancestors' => 'frameAncestors',
-            'frame-src'       => 'frameSrc',
-            'img-src'         => 'imageSrc',
-            'media-src'       => 'mediaSrc',
-            'object-src'      => 'objectSrc',
-            'plugin-types'    => 'pluginTypes',
-            'script-src'      => 'scriptSrc',
-            'style-src'       => 'styleSrc',
-            'manifest-src'    => 'manifestSrc',
-            'sandbox'         => 'sandbox',
-            'report-uri'      => 'reportURI',
-        ];
-
         // inject default base & default URIs if needed
         if (empty($this->baseURI)) {
             $this->baseURI = 'self';
@@ -733,7 +744,7 @@ class ContentSecurityPolicy
             $this->defaultSrc = 'self';
         }
 
-        foreach ($directives as $name => $property) {
+        foreach ($this->directives as $name => $property) {
             if (! empty($this->{$property})) {
                 $this->addToHeader($name, $this->{$property});
             }
@@ -795,7 +806,7 @@ class ContentSecurityPolicy
                 $reportOnly = $this->reportOnly;
             }
 
-            if (strpos($value, 'nonce-') === 0) {
+            if (str_starts_with($value, 'nonce-')) {
                 $value = "'{$value}'";
             }
 
@@ -813,5 +824,21 @@ class ContentSecurityPolicy
         if ($reportSources !== []) {
             $this->reportOnlyHeaders[$name] = implode(' ', $reportSources);
         }
+    }
+
+    /**
+     * Clear the directive.
+     *
+     * @param string $directive CSP directive
+     */
+    public function clearDirective(string $directive): void
+    {
+        if ($directive === 'report-uris') {
+            $this->{$this->directives[$directive]} = null;
+
+            return;
+        }
+
+        $this->{$this->directives[$directive]} = [];
     }
 }
